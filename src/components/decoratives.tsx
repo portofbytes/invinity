@@ -7,6 +7,7 @@
 // increased so the motif reads as a flourish rather than a faint trace.
 
 import type { Wine } from "@/lib/schemas";
+import { color } from "@/tokens";
 
 type Anchor = "top-left" | "top-right" | "bottom-left" | "bottom-right";
 
@@ -559,15 +560,15 @@ function paisleySvg(size: number): string {
     [46, 18], [40, 26], [30, 32], [16, 34], [4, 34],
   ];
   const ring = ringPts
-    .map(([x, y]) => `<circle cx="${x}" cy="${y}" r="1.6" fill="url(#bead)"/>`)
+    .map(([x, y]) => `<circle cx="${x}" cy="${y}" r="1.6" fill="url(#invinitybead)"/>`)
     .join("");
 
   // A smaller boteh sits inside the larger one (paisley-within-paisley) — a
   // hallmark of true paisley jacquard.
   const innerBoteh = `
     <g transform="translate(-2 -34) scale(0.30)">
-      <path d="${boteh}" fill="url(#fillSoft)" stroke="#C99232" stroke-width="1.2"/>
-      <circle cx="-6" cy="-34" r="3" fill="#F5DA8A"/>
+      <path d="${boteh}" fill="url(#fillSoft)" stroke="${color.paisleyGoldMid}" stroke-width="1.2"/>
+      <circle cx="-6" cy="-34" r="3" fill="${color.paisleyHighlight}"/>
     </g>
   `;
 
@@ -582,7 +583,7 @@ function paisleySvg(size: number): string {
         const y2 = cy + Math.sin(a) * R;
         const x3 = cx + Math.cos(a + 0.18) * R * 0.4;
         const y3 = cy + Math.sin(a + 0.18) * R * 0.4;
-        return `<path d="M${x1.toFixed(1)},${y1.toFixed(1)} Q${x2.toFixed(1)},${y2.toFixed(1)} ${x3.toFixed(1)},${y3.toFixed(1)} Z" fill="url(#fillSoft)" stroke="#8C5C18" stroke-width="0.6"/>`;
+        return `<path d="M${x1.toFixed(1)},${y1.toFixed(1)} Q${x2.toFixed(1)},${y2.toFixed(1)} ${x3.toFixed(1)},${y3.toFixed(1)} Z" fill="url(#fillSoft)" stroke="${color.paisleyGoldDeep}" stroke-width="0.6"/>`;
       })
       .join("");
     const dots = Array.from({ length: 8 })
@@ -590,10 +591,10 @@ function paisleySvg(size: number): string {
         const a = (i / 8) * Math.PI * 2 + Math.PI / 8;
         const x = cx + Math.cos(a) * R * 0.78;
         const y = cy + Math.sin(a) * R * 0.78;
-        return `<circle cx="${x.toFixed(1)}" cy="${y.toFixed(1)}" r="1.2" fill="#F5DA8A"/>`;
+        return `<circle cx="${x.toFixed(1)}" cy="${y.toFixed(1)}" r="1.2" fill="${color.paisleyHighlight}"/>`;
       })
       .join("");
-    return `${petals}${dots}<circle cx="${cx}" cy="${cy}" r="${(R * 0.28).toFixed(1)}" fill="#F5DA8A"/><circle cx="${cx}" cy="${cy}" r="${(R * 0.14).toFixed(1)}" fill="#3A2810"/>`;
+    return `${petals}${dots}<circle cx="${cx}" cy="${cy}" r="${(R * 0.28).toFixed(1)}" fill="${color.paisleyHighlight}"/><circle cx="${cx}" cy="${cy}" r="${(R * 0.14).toFixed(1)}" fill="${color.paisleyShadow}"/>`;
   };
 
   // Sun-star — eight rays plus a filled center, used as a filler ornament.
@@ -605,7 +606,7 @@ function paisleySvg(size: number): string {
         const y1 = cy + Math.sin(a) * R * 0.32;
         const x2 = cx + Math.cos(a) * R;
         const y2 = cy + Math.sin(a) * R;
-        return `<line x1="${x1.toFixed(1)}" y1="${y1.toFixed(1)}" x2="${x2.toFixed(1)}" y2="${y2.toFixed(1)}" stroke="#E8C56A" stroke-width="${(R * 0.16).toFixed(1)}" stroke-linecap="round"/>`;
+        return `<line x1="${x1.toFixed(1)}" y1="${y1.toFixed(1)}" x2="${x2.toFixed(1)}" y2="${y2.toFixed(1)}" stroke="${color.paisleyGold}" stroke-width="${(R * 0.16).toFixed(1)}" stroke-linecap="round"/>`;
       })
       .join("");
     const halfRays = Array.from({ length: 8 })
@@ -615,10 +616,10 @@ function paisleySvg(size: number): string {
         const y1 = cy + Math.sin(a) * R * 0.32;
         const x2 = cx + Math.cos(a) * R * 0.7;
         const y2 = cy + Math.sin(a) * R * 0.7;
-        return `<line x1="${x1.toFixed(1)}" y1="${y1.toFixed(1)}" x2="${x2.toFixed(1)}" y2="${y2.toFixed(1)}" stroke="#C99232" stroke-width="${(R * 0.1).toFixed(1)}" stroke-linecap="round"/>`;
+        return `<line x1="${x1.toFixed(1)}" y1="${y1.toFixed(1)}" x2="${x2.toFixed(1)}" y2="${y2.toFixed(1)}" stroke="${color.paisleyGoldMid}" stroke-width="${(R * 0.1).toFixed(1)}" stroke-linecap="round"/>`;
       })
       .join("");
-    return `${rays}${halfRays}<circle cx="${cx}" cy="${cy}" r="${(R * 0.30).toFixed(1)}" fill="#F5DA8A"/><circle cx="${cx}" cy="${cy}" r="${(R * 0.12).toFixed(1)}" fill="#3A2810"/>`;
+    return `${rays}${halfRays}<circle cx="${cx}" cy="${cy}" r="${(R * 0.30).toFixed(1)}" fill="${color.paisleyHighlight}"/><circle cx="${cx}" cy="${cy}" r="${(R * 0.12).toFixed(1)}" fill="${color.paisleyShadow}"/>`;
   };
 
   // Five-petal floret — small filler.
@@ -628,10 +629,10 @@ function paisleySvg(size: number): string {
         const a = (i / 5) * Math.PI * 2 - Math.PI / 2;
         const x = cx + Math.cos(a) * R;
         const y = cy + Math.sin(a) * R;
-        return `<circle cx="${x.toFixed(1)}" cy="${y.toFixed(1)}" r="${(R * 0.6).toFixed(1)}" fill="#E8C56A"/>`;
+        return `<circle cx="${x.toFixed(1)}" cy="${y.toFixed(1)}" r="${(R * 0.6).toFixed(1)}" fill="${color.paisleyGold}"/>`;
       })
       .join("");
-    return `${petals}<circle cx="${cx}" cy="${cy}" r="${(R * 0.55).toFixed(1)}" fill="#F5DA8A"/><circle cx="${cx}" cy="${cy}" r="${(R * 0.22).toFixed(1)}" fill="#8C5C18"/>`;
+    return `${petals}<circle cx="${cx}" cy="${cy}" r="${(R * 0.55).toFixed(1)}" fill="${color.paisleyHighlight}"/><circle cx="${cx}" cy="${cy}" r="${(R * 0.22).toFixed(1)}" fill="${color.paisleyGoldDeep}"/>`;
   };
 
   // Vine of beads connecting two paisleys.
@@ -644,7 +645,7 @@ function paisleySvg(size: number): string {
         const my = (y1 + y2) / 2 - 8;
         const x = (1 - t) * (1 - t) * x1 + 2 * (1 - t) * t * mx + t * t * x2;
         const y = (1 - t) * (1 - t) * y1 + 2 * (1 - t) * t * my + t * t * y2;
-        return `<circle cx="${x.toFixed(1)}" cy="${y.toFixed(1)}" r="1.4" fill="#C99232"/>`;
+        return `<circle cx="${x.toFixed(1)}" cy="${y.toFixed(1)}" r="1.4" fill="${color.paisleyGoldMid}"/>`;
       })
       .join("");
   };
@@ -663,17 +664,17 @@ function paisleySvg(size: number): string {
   return `<?xml version="1.0" encoding="UTF-8"?>
 <svg xmlns="http://www.w3.org/2000/svg" width="${size}" height="${size}" viewBox="0 0 ${size} ${size}">
   <defs>
-    <radialGradient id="bead" cx="0.35" cy="0.35" r="0.7">
-      <stop offset="0" stop-color="#FCEAB0"/>
-      <stop offset="0.55" stop-color="#E8C56A"/>
-      <stop offset="1" stop-color="#8C5C18"/>
+    <radialGradient id="invinitybead" cx="0.35" cy="0.35" r="0.7">
+      <stop offset="0" stop-color="${color.paisleyHighlightPeach}"/>
+      <stop offset="0.55" stop-color="${color.paisleyGold}"/>
+      <stop offset="1" stop-color="${color.paisleyGoldDeep}"/>
     </radialGradient>
     <linearGradient id="fillSoft" x1="0" y1="0" x2="0" y2="1">
-      <stop offset="0" stop-color="#F5DA8A"/>
-      <stop offset="1" stop-color="#C99232"/>
+      <stop offset="0" stop-color="${color.paisleyHighlight}"/>
+      <stop offset="1" stop-color="${color.paisleyGoldMid}"/>
     </linearGradient>
   </defs>
-  <rect width="${size}" height="${size}" fill="#070504"/>
+  <rect width="${size}" height="${size}" fill="${color.paisleyGround}"/>
 
   <!-- Large paisley, lower-left, tip pointing up-right -->
   <g transform="translate(${size * 0.34} ${size * 0.94}) scale(0.62)">${paisleyUnit}</g>

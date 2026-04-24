@@ -24,6 +24,14 @@ export const color = {
   sparklingGlassMid: "#2B2E28",
   sparklingGlassLight: "#343830",
   sparklingFoil: "#8E8876",
+  // Paisley textile palette — used by PaisleyFrame decoratives.
+  paisleyHighlight: "#F5DA8A",
+  paisleyGold: "#E8C56A",
+  paisleyGoldMid: "#C99232",
+  paisleyGoldDeep: "#8C5C18",
+  paisleyHighlightPeach: "#FCEAB0",
+  paisleyGround: "#070504",
+  paisleyShadow: "#3A2810",
 } as const;
 
 export const duration = {
