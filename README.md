@@ -129,33 +129,117 @@ A Next.js 16 + React 19 + TypeScript maison-grade storefront with Zod-validated 
 
 ---
 
-## Deploy
+## Scripts — full reference
 
-### From any machine, first time
+### Day-to-day development
+
+| Command | What it does |
+|---|---|
+| `npm run dev` | Next.js dev server on `http://localhost:3000` with Turbopack. Binds `0.0.0.0` for LAN testing. Hot reload, full server actions. |
+| `npm run build` | Production Next.js build (runs prebuild gates first). Output in `.next/`. Doesn't include the OpenNext Cloudflare bundle — use `cf:build` for that. |
+| `npm run start` | Serve the `.next/` build locally on port 3000. Used for smoke-testing a prod build on your machine. |
+| `npm run lint` | ESLint 9 over all source files. |
+| `npm run test` | Vitest 4, run-once. |
+| `npm run test:watch` | Vitest 4, watch mode. Use while iterating on logic. |
+
+### Build gates (prebuild — run automatically before `npm run build`)
+
+These run in order; any failure blocks the build.
+
+| Command | What it does |
+|---|---|
+| `npm run standards` | Custom source linter (`scripts/check-standards.mjs`). Rejects hex colors outside `tokens.ts`, hardcoded emails/URLs, `console.log`, `@ts-ignore`, direct `process.env.*` reads, integration SDK imports outside `src/integrations/**`. |
+| `npm run content:validate` | Validates every JSON file in `/content/` against its Zod schema in `src/lib/schemas.ts`. |
+| `npm run test` | The 19-test unit suite (schemas, env, rate limit, adapter contracts). |
+
+The actual `prebuild` target chains all three: `npm run standards && npm run content:validate && npm test`. Running any of them standalone is useful while iterating.
+
+### Content CRUD (wines and friends)
+
+These read/write `content/*.json` files with Zod validation on every write.
+
+| Command | What it does |
+|---|---|
+| `npm run wine:list` | Prints all wines as a table (slug, vintage, status, price). |
+| `npm run wine:add` | Interactive prompt to add a new wine. Validates before saving. |
+| `npm run content` | Generic content CLI — `wine:update`, `wine:set-status`, `wine:remove`, `validate`, etc. Run it with no args to see subcommands. |
+| `npm run content:validate` | Alias of `node scripts/content.mjs validate`. |
+
+### Configuration inspection
+
+| Command | What it does |
+|---|---|
+| `npm run config:inspect` | Prints resolved env + integration config with **secrets redacted**. Shows which adapters are in `live` vs `stub` mode and why. Safe to share output. |
+
+### Cloudflare deploy — OpenNext
+
+| Command | What it does |
+|---|---|
+| `npm run cf:build` | Runs `next build` then `opennextjs-cloudflare build`. Produces `.open-next/worker.js` and `.open-next/assets/` — ready to deploy. |
+| `npm run cf:preview` | Build + run the Worker locally via Wrangler. Gives you a production-equivalent preview on `http://localhost:8787`. Use before pushing if you touched anything server-side. |
+| `npm run cf:deploy` | Build + `wrangler deploy`. Pushes the Worker to Cloudflare directly from your machine, bypassing GitHub Actions. Useful for hotfixes; normal path is `git push`. |
+
+### One-shot deploy (sync repo secrets + push + watch CI)
+
+| Script | Use from |
+|---|---|
+| `bash scripts/deploy.sh` | Linux, macOS, WSL. |
+| `powershell -ExecutionPolicy Bypass -File scripts\deploy.ps1` | Windows (cmd or PowerShell). |
+| `iwr https://raw.githubusercontent.com/portofbytes/invinity/main/scripts/bootstrap.ps1 \| iex` | Any fresh Windows machine — clones the repo, copies `deploy.env.example`, opens Notepad to fill it in, then runs `deploy.ps1`. |
+
+What they do (identical behavior in all three):
+
+1. Verify `git`, `gh`, `node` are installed; `gh auth status` must be OK.
+2. Init git repo if missing; commit any pending changes.
+3. Create the GitHub repo (if it doesn't exist) and push.
+4. Sync every key from `scripts/deploy.env` into GitHub Actions **secrets** (sensitive: tokens, API keys) and **variables** (public: site URL, analytics ID, email addresses).
+5. `git push origin main` → GitHub Actions takes over.
+
+`scripts/deploy.env` is **gitignored**. It never gets committed. Secrets flow from local env → encrypted GitHub secrets → Actions job at runtime; they never sit in a file that leaves your machine.
+
+### CI/CD — what runs on push
+
+`.github/workflows/deploy.yml` is triggered on every push to `main`:
+
+1. **Checkout** + **setup Node 20** + `npm ci`.
+2. **Build (OpenNext for Cloudflare)** — runs `npm run cf:build`, which runs the full prebuild gate chain (`standards → content:validate → vitest → next build`) plus `opennextjs-cloudflare build`. Any failure stops the deploy.
+3. **Deploy to Cloudflare Workers** — `npx wrangler deploy`, authenticated by `CLOUDFLARE_API_TOKEN` + `CLOUDFLARE_ACCOUNT_ID` from repo secrets.
+
+### Deploy — from any machine
+
+**First time on a new machine:**
 
 ```bash
-# one-time per machine:
+# one-time:
 #   - install git, gh, node 20+
 #   - gh auth login
 
 git clone https://github.com/portofbytes/invinity.git
 cd invinity
 cp scripts/deploy.env.example scripts/deploy.env
-# edit scripts/deploy.env — fill in GITHUB_REPO + Cloudflare credentials
+# edit scripts/deploy.env — GITHUB_REPO, CLOUDFLARE_ACCOUNT_ID,
+# CLOUDFLARE_API_TOKEN at minimum
 
 bash scripts/deploy.sh   # or: powershell -File scripts\deploy.ps1
 ```
 
-### Every day after
+**Every day after:**
 
 ```bash
-git push         # Actions builds + deploys to Cloudflare automatically
+git push          # Actions builds + deploys automatically
 ```
 
-### Watching a deploy
+**Watching a deploy:**
 
 ```bash
 gh run watch --repo portofbytes/invinity
+gh run view --log-failed --repo portofbytes/invinity   # on failure
+```
+
+**Hotfix without CI (skip Actions, deploy direct):**
+
+```bash
+npm run cf:deploy
 ```
 
 ---
