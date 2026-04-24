@@ -1,183 +1,237 @@
-# Invinity
+# Invinity — Tech Stack & Key Features
 
-Digital sparkling maison. Next.js 16 (App Router) · React 19 · TypeScript · Tailwind v4.
+## Tech stack
 
-## Run
+### Framework & language
+- **Next.js 16.2** — App Router, Turbopack, server components + server actions
+- **React 19**
+- **TypeScript 5** — strict mode, no `@ts-ignore` permitted
+- **Node 20.9+**
 
-```bash
-cd site
-npm run dev                # http://localhost:3000
-npm run build              # production build (runs standards + content gates first)
-npm start                  # serve production build
-```
+### Styling & UI
+- **Tailwind CSS v4** — utility delivery layer only
+- **CSS custom properties** — the design system lives in tokens, not utilities
+- **Cormorant Garamond + Inter** — via `next/font/google` (self-hosted, zero-layout-shift)
+- **Radix UI** — `@radix-ui/react-dialog`, `@radix-ui/react-accordion` for a11y-correct primitives
+- **Motion (Framer)** — page transitions, cinematic reveals
 
-## Editing content
+### Data & validation
+- **Zod v4** — single contract for content schemas, env vars, form payloads, API boundaries
+- **JSON content files** in `/content` — editable without TypeScript knowledge
 
-All product, tier, experience, and journal content lives as **validated JSON** in `content/`.
-A CLI mutates those files safely — every write is re-validated by the same Zod schemas the
-site imports, so you cannot leave the repo in a broken state.
+### Commerce / CMS / Email (adapter-backed)
+- **Squarespace — URL-handoff commerce.** No SDK, no storefront API; the Next.js catalog links each "Buy" button to the wine's Squarespace product URL. Adapter returns a URL, the browser navigates. Path exists for a future migration to real on-site checkout (Stripe/Snipcart).
+- **Sanity Content Lake** — HTTP query seam
+- **Resend** — transactional email
+- All three run in stub mode when env vars are absent; flipping one switch moves them to live.
 
-```bash
-npm run content:validate              # validate every content/*.json
-npm run wine:list                     # table of all wines
-npm run content -- wine:show <slug>   # print a wine
-npm run wine:add                      # interactive prompts
-npm run content -- wine:update <slug> price=49 status=available
-npm run content -- wine:set-status <slug> sold-out
-npm run content -- wine:remove <slug>            # asks to confirm
-npm run content -- wine:remove <slug> --force
-```
+### Deployment & runtime
+- **Cloudflare Workers** — production runtime; full Next.js server rendering (not static export)
+- **OpenNext for Cloudflare** (`@opennextjs/cloudflare`) — build adapter that bundles the Next.js server into a Worker with static assets on the Workers assets binding
+- **GitHub Actions** — CI/CD pipeline; every push to `main` runs the four-gate build then `wrangler deploy`
+- **Live at:** `https://invinity.sparkling-wine.workers.dev/` (custom `invinity.ca` planned)
 
-To extend the CLI to other entities (tiers, experiences, articles), copy the `wine:*`
-pattern in `scripts/content.mjs`. All schemas are in `src/lib/schemas.ts`.
+### Tooling
+- **ESLint 9** with `eslint-config-next` + custom `no-restricted-syntax` rules
+- **Vitest 4** + `@vitest/coverage-v8`
+- **tsx** — runs TS directly from Node scripts (no build step for CLIs)
+- **Wrangler** — Cloudflare Workers CLI; also used locally for `wrangler dev` previews
+- **@axe-core/react** — dev-time a11y scanner (zero prod cost)
+- **server-only** — prevents server-only modules leaking to the client bundle
 
-## Configuration
+### Auxiliary
+- `motion`, `zod`, custom CLI scripts in `.mjs`, `scripts/deploy.{sh,ps1}` and `scripts/bootstrap.ps1` for one-shot deploys
 
-Environment variables are validated by Zod at startup via `src/lib/env.ts`. An invalid or
-missing required value fails loudly instead of silently producing wrong URLs/links.
+---
 
-Copy `.env.example` to `.env.local` and fill in as needed. `NEXT_PUBLIC_*` vars are exposed
-to the browser; unprefixed ones are server-only and must be read via `serverEnv()`.
+## Key features
 
-## Build-time gates
+### Site surface
+- **40+ routes**, all pre-rendered except `/search`
+- Full design system: chalk/paper/stone/bottle/champagne palette, restrained type scale, square corners, hairline rules, tonal surfaces, grain texture
+- Global shell: fixed-height sticky header with scroll compaction, full-screen nav panel, age gate, cart drawer, dismissible announcement strip, cookie banner
+- Editorial: `Hero` (4 variants), `ChapterIntro`, `SplitEditorial`, `FullBleed`, `PullQuote`, `Timeline`, `FounderProfile`, `ConciergeContact`
+- Commerce: `ProductTile`, `ProductGrid`, `ProductPurchase` (sticky on desktop), `Gallery` with 4-view lightbox + paisley-framed bottle portrait, `WaitlistPanel` (two-step Radix dialog), `FulfillmentSelector` (pickup vs ship)
+- Forms: Release list, Experience request, Contact, Waitlist — all via React transitions + server actions
+- Motion: page crossfade + stagger, per-element reveal via IntersectionObserver, reduced-motion respected throughout
+- Decorative category motifs (`SparklingMotif`, `GrandeCuveeMotif`, `OceanAgedMotif`, `ClubMotif`, `FluteMotif`, `PaisleyFrame`) — stroke-based gold line-art drawn from reference imagery, rendered via SVG, tokens-driven
 
-Running `npm run build` runs three gates before `next build`:
+### Content model
+- Wines, collections, club tiers (Dungeness/Chinook/Orca), experiences, journal articles live as validated JSON in `/content`
+- Each has a Zod schema in `src/lib/schemas.ts` — the single contract as data migrates to Sanity
+- CLI for CRUD: `npm run wine:list | wine:add | wine:update | wine:set-status | wine:remove`
+- Every write re-validates before touching disk — bad edits cannot corrupt the repo
+- `media` field on `Wine` is optional: add a photo in JSON → site uses it; leave empty → token-backed SVG bottle art renders
 
-### 1. Standards checker (`scripts/check-standards.mjs`)
+### Configuration
+- Typed env via Zod in `src/lib/env.ts`; all `process.env` reads forbidden outside this file
+- Cross-field validation: half-configured states (e.g. Resend key without sender) fail at startup
+- Integration mode is **derived**, not set — `commerceMode()`, `sanityMode()`, `emailMode()` return `"live" | "stub"` based on what env provides
+- `npm run config:inspect` prints resolved config per integration with secrets redacted
 
-Scans `src/` and **fails the build** on:
+### Integration layer
+- `src/integrations/{commerce,sanity,email}.ts` — only place SDKs may be imported
+- Each exports a typed adapter with identical surface in stub and live mode
+- Endpoints, API versions, and timeouts all read from `integrations` config — never hardcoded
+- Standards rule fails the build if anyone imports `@sanity/*` or `resend` outside `src/integrations/**`
 
-- hex colors outside `src/tokens.ts` / `globals.css` (or inline SVG attrs)
-- hardcoded email / phone / street address (must come from `data/site.ts`)
-- absolute `https://invinity.ca` URLs (must derive from `NEXT_PUBLIC_SITE_URL`)
-- `console.log` / `console.debug`
-- `@ts-ignore`
-- raw `data:` URLs in TSX
-- direct imports of integration SDKs outside `src/integrations/**`
+### Server actions (server-side by design)
+- `src/app/actions/forms.ts` — subscribe, experience request, contact, waitlist
+- `src/app/actions/checkout.ts` — cart → Squarespace URL handoff
+- Every action: Zod-validates input, passes through the rate limiter, delegates to an adapter, returns a discriminated result type
+- Run on Cloudflare Workers at request time (not statically exported)
+
+### Reliability
+- Rate limiting on every server action — in-memory default, Redis-ready `RateLimitStore` interface; will move to Cloudflare KV when traffic warrants
+- Three error boundaries: `global-error.tsx`, route `error.tsx`, `loading.tsx`
+- 19 unit tests covering schemas, env validation, rate limit, and adapter contracts
+- **Build gates** — standards → content validation → tests → `next build` → OpenNext Cloudflare bundle. Any one failing blocks deploy.
+
+### Accessibility (WCAG 2.2 AA baseline)
+- Radix primitives for every dialog, accordion, focus trap
+- Skip link, visible `focus-visible` rings, landmark roles, proper heading hierarchy
+- `prefers-reduced-motion` disables all reveal animations and Radix animations
+- `@axe-core/react` runs only in dev, logs violations to console as you build
+
+### SEO / machine readability
+- `Organization` + `Winery` (LocalBusiness) emitted site-wide
+- `Product` + `Offer` on every PDP with correct availability mapping
+- `Event` on every experience detail
+- `Article` on every journal post
+- `BreadcrumbList` on deep pages
+- `sitemap.xml`, `robots.txt`, generated OG image — all from single-source config
+- `metadataBase` driven by env
+
+### Standards enforcement (prebuild)
+Build is blocked on:
+- hex colors outside `tokens.ts` (inline SVG attrs too)
+- hardcoded email / phone / address / `invinity.ca` URLs
+- `console.log`, `@ts-ignore`, raw `data:` URLs
 - direct `process.env.*` reads outside `src/lib/env.ts`
-- missing `metadata` export on page files (warning)
+- direct integration SDK imports outside `src/integrations/**`
+- invalid content JSON
+- failing tests
 
-Add new rules at the bottom of the `RULES` array. ESLint mirrors the key bans via
-`no-restricted-syntax` so violations also surface in the IDE.
+### Developer ergonomics
+- Hot reload via Turbopack
+- Dev-server binds `-H 0.0.0.0` for LAN testing
+- `tsx` lets CLIs import TS schemas directly, no compilation step
+- `wrangler dev` gives a local Worker preview that mirrors production
+- One-shot deploy from any machine: `bash scripts/deploy.sh` (Unix/WSL) or `powershell -ExecutionPolicy Bypass -File scripts\deploy.ps1` (Windows)
+- Bootstrap URL for a fresh machine: `iwr https://raw.githubusercontent.com/portofbytes/invinity/main/scripts/bootstrap.ps1 | iex`
+- Clear migration path: JSON → Sanity (content), URL handoff → Stripe/Snipcart (commerce). The Zod contract stays constant through all phases.
 
-### 2. Content validator (`scripts/content.mjs validate`)
+---
 
-Parses every `content/*.json` against its Zod schema. Missing required fields, wrong
-types, duplicate slugs, and invalid enum values all block the build with a specific message.
+## One-sentence summary
 
-### 3. Unit tests (`vitest run`)
+A Next.js 16 + React 19 + TypeScript maison-grade storefront with Zod-validated content, Radix-backed a11y primitives, adapter-isolated Squarespace/Sanity/Resend integrations, rate-limited server actions, and a five-gate build pipeline (standards → content → tests → `next build` → OpenNext Cloudflare bundle) running in production on Cloudflare Workers with GitHub Actions CI/CD.
 
-Schema, env, rate-limit, and integration adapters each have tests. A failing test
-blocks the build.
+---
 
-## Reliability
+## Deploy
 
-- **Error boundaries**: `src/app/global-error.tsx` and `src/app/error.tsx` catch render
-  failures; `src/app/loading.tsx` covers async data fetches.
-- **Rate limiting**: every server action goes through `src/lib/rate-limit.ts`. The
-  default is an in-memory limiter keyed by client IP; swap in Redis/Upstash by
-  implementing `RateLimitStore` and calling `configureRateLimitStore()` from an
-  instrumentation file.
-- **Dev-time a11y**: `@axe-core/react` runs only in development and logs WCAG
-  violations to the browser console. Zero cost in production.
+### From any machine, first time
 
-## Integration model
+```bash
+# one-time per machine:
+#   - install git, gh, node 20+
+#   - gh auth login
 
-### Commerce — Squarespace (handoff pattern)
+git clone https://github.com/portofbytes/invinity.git
+cd invinity
+cp scripts/deploy.env.example scripts/deploy.env
+# edit scripts/deploy.env — fill in GITHUB_REPO + Cloudflare credentials
 
-Squarespace is the commerce backend (products, inventory, cart, checkout, payments,
-tax, shipping, order emails). Our Next.js site presents the brand and catalog; when
-a customer is ready to buy, **commerce.startCheckout()** hands them to the
-Squarespace-hosted shop.
-
-Each wine in `content/wines.json` may carry:
-
-```json
-"squarespace": {
-  "productSlug": "grande-cuvee-blanc-de-blancs-2018",
-  "productUrl": "https://shop.invinity.ca/shop/..."
-}
+bash scripts/deploy.sh   # or: powershell -File scripts\deploy.ps1
 ```
 
-`productUrl` wins when set; otherwise the adapter builds
-`${NEXT_PUBLIC_SQUARESPACE_STORE_URL}/shop/${productSlug ?? slug}`.
+### Every day after
 
-To go live: set `NEXT_PUBLIC_SQUARESPACE_STORE_URL=https://shop.invinity.ca` and
-make sure every wine has either a `productSlug` that matches the Squarespace URL
-or an explicit `productUrl`. Run `npm run config:inspect` to confirm `[live]`.
-
-### Email — Resend via invinity.ca
-
-All transactional email is sent via Resend. The default sender is
-`house@invinity.ca`, configurable via `RESEND_FROM`. Set `RESEND_API_KEY` and
-verify the domain in Resend before going live.
-
-### CMS — Sanity (v2)
-
-Content schemas in `src/lib/schemas.ts` map 1:1 to Sanity schema types. Replace
-the JSON loaders in `src/data/*.ts` with Sanity client fetches; the Zod validation
-stays as the contract boundary and the site renders unchanged.
-
-### Imagery
-
-Every image surface renders a tonal composition until commissioned photography
-arrives. Add `media.bottle` (etc.) to a wine in JSON and the site uses `next/image`
-automatically — no code change.
-
-## Migration path (v1 → CMS)
-
-```
-v1 (now)                    v1.5                           v2
-JSON file in content/  →    Sanity Studio @ /studio  →     Sanity + Shopify
-Edit via CLI                Edit via Sanity UI             Wines from Shopify,
-Zod validates on save       Zod validates on publish       editorial from Sanity
+```bash
+git push         # Actions builds + deploys to Cloudflare automatically
 ```
 
-The Zod schemas in `src/lib/schemas.ts` stay constant through all three phases; they
-are the contract. Swap data sources without touching components or pages.
+### Watching a deploy
+
+```bash
+gh run watch --repo portofbytes/invinity
+```
+
+---
+
+## Configuration — what's set and what's missing
+
+### ✅ Currently live
+- Cloudflare Workers deploy pipeline (GitHub → Actions → wrangler)
+- Account ID + API token as repo secrets
+- All 40+ routes rendering on `invinity.sparkling-wine.workers.dev`
+- Squarespace "Buy" handoff (no shop configured yet, so links fall through to the shop root)
+
+### ⚠ Still in stub mode — needs setup to "really work"
+
+| Feature | What to do | Where |
+|---|---|---|
+| **Real email delivery** | Sign up at [resend.com](https://resend.com) (free: 3000/mo). Verify `invinity.ca` domain (SPF/DKIM records at your DNS). Create an API key. | Add `RESEND_API_KEY` as a **secret**, plus `EMAIL_FROM=house@invinity.ca` + `EMAIL_TO_HOUSE=...` as **variables** at https://github.com/portofbytes/invinity/settings/secrets/actions |
+| **Squarespace product links** | Create your Squarespace shop. For each wine, paste its product URL into `content/wines.json` under `squarespace.productUrl`. | `content/wines.json` |
+| **Sanity CMS** (when JSON becomes limiting) | Create a Sanity project at [sanity.io](https://www.sanity.io). Copy project ID + read token. | Repo secrets: `SANITY_PROJECT_ID`, `SANITY_DATASET`, `SANITY_READ_TOKEN` |
+| **Custom domain `invinity.ca`** | Add the domain in Cloudflare → Workers & Pages → invinity → Settings → Domains & Routes. Point nameservers at Cloudflare (easiest) or add A records. | Cloudflare dashboard |
+| **Analytics** | Pick a provider (Plausible, Fathom, or GA4). Add the script ID. | Repo variable: `NEXT_PUBLIC_ANALYTICS_ID` |
+
+### 📦 Content still to fill
+
+- **Bottle photos** — each wine in `content/wines.json` can have a `media.bottle` object pointing at an image URL. Without it, procedural SVG bottle art renders.
+- **Journal articles** — seed posts are in place; replace with real editorial when ready.
+- **Experience copy** — drafts populated, review for voice before launch.
+
+---
+
+## Roadmap — near-term
+
+1. **Resend live.** Single secret + domain verification. Forms start delivering real email. Biggest single unlock.
+2. **Custom domain `invinity.ca` on Cloudflare.** DNS cutover + SSL (automatic). Replaces the workers.dev URL.
+3. **Squarespace product URLs** filled in across `content/wines.json`. "Buy" buttons become real handoffs.
+4. **Bottle photography** added to `content/wines.json` for the 8 wines.
+5. **Analytics** — privacy-respecting (Plausible/Fathom), one script line.
+6. **Rate limit store → Cloudflare KV.** In-memory default loses state on Worker cold start; a KV binding makes rate limits durable. Needed before any real traffic.
+
+## Roadmap — medium-term (Phase C: real on-site checkout)
+
+When Squarespace handoff feels limiting:
+
+1. **Stripe (or Snipcart).** Replace the commerce adapter's `startCheckout()` to return a Stripe Checkout Session URL. No page changes needed.
+2. **BC DTC-alcohol compliance** — age verification at checkout, delivery jurisdiction rules, carrier integration.
+3. **Sanity as content backend.** Swap the `wines` read from JSON files to Sanity queries. The Zod schema is shared — content shape stays identical.
+4. **Observability** — Cloudflare Workers Analytics Engine or external (Sentry, Axiom) for error tracking and latency.
+
+---
 
 ## Structure
 
 ```
-content/                # editable JSON — wines, collections, tiers, experiences, journal
-src/
-  app/                  # routes (App Router)
-    actions/            # server actions (forms, checkout)
-    global-error.tsx    # top-level error boundary
-    error.tsx           # per-segment error boundary
-    loading.tsx         # per-segment loading state
-  components/           # shell + editorial + commerce + forms
-    house-image.tsx     # next/image swap seam — photo or token-backed placeholder
-  data/                 # thin loaders: read JSON, validate with Zod, export typed arrays
-  integrations/         # shopify, sanity, email — the only place SDKs are imported
-  lib/
-    schemas.ts          # Zod schemas — the content contract
-    env.ts              # typed env + integration modes
-    ld.tsx              # JSON-LD helpers (Product, Event, Article, LocalBusiness…)
-    rate-limit.ts       # pluggable rate limiter
-  tokens.ts             # design tokens (colors, durations, easings)
-  app/globals.css       # token-backed CSS custom properties + base element styles
-scripts/
-  check-standards.mjs   # prebuild standards gate
-  content.mjs           # CRUD CLI for content
-  config-inspect.mjs    # prints resolved config + integration modes
-tests/                  # vitest tests live alongside source as *.test.ts
-```
-
-## All scripts
-
-```
-npm run dev            # start dev server
-npm run build          # standards → content validation → tests → next build
-npm start              # serve production build
-npm test               # vitest run
-npm run test:watch     # vitest watch mode
-npm run standards      # run standards checker only
-npm run content:validate
-npm run wine:list
-npm run wine:add
-npm run content -- wine:update <slug> key=value
-npm run content -- wine:set-status <slug> <status>
-npm run content -- wine:remove <slug>
-npm run config:inspect              # resolved env + mode per integration
+site/
+├── .github/workflows/deploy.yml   # CI/CD: build + Cloudflare deploy on push
+├── content/                        # JSON content (wines, tiers, experiences, etc.)
+├── open-next.config.ts             # OpenNext adapter config
+├── wrangler.jsonc                  # Cloudflare Worker config
+├── public/                         # static assets
+├── scripts/
+│   ├── deploy.sh / deploy.ps1      # one-shot deploy (sync secrets + push)
+│   ├── bootstrap.ps1               # curlable first-time-machine deploy
+│   ├── check-standards.mjs         # prebuild gate: source linting beyond ESLint
+│   ├── content.mjs                 # content CRUD + validation CLI
+│   └── deploy.env.example          # template for per-machine config
+└── src/
+    ├── app/
+    │   ├── actions/                # server actions (forms, checkout)
+    │   ├── globals.css             # CSS custom properties + base styles
+    │   ├── [routes]/               # 40+ page routes
+    │   ├── layout.tsx, page.tsx
+    │   ├── sitemap.ts, robots.ts, opengraph-image.tsx
+    │   └── error.tsx, global-error.tsx, loading.tsx, not-found.tsx
+    ├── components/                 # UI: sections, product, gallery, decoratives, etc.
+    ├── data/                       # typed loaders that read /content
+    ├── integrations/               # adapters: commerce, sanity, email
+    ├── lib/                        # env, schemas, rate limit, LD-JSON helpers
+    └── tokens.ts                   # design-system color palette (only hex source)
 ```
