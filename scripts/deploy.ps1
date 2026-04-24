@@ -19,6 +19,25 @@
 #   .\scripts\deploy.ps1
 # ---------------------------------------------------------------------------
 $ErrorActionPreference = 'Stop'
+# Don't let native-command stderr (e.g. gh warnings) raise a terminating
+# error — we check $LASTEXITCODE explicitly where it matters.
+$PSNativeCommandUseErrorActionPreference = $false
+
+function Invoke-Native {
+  # Runs a native command, swallows stderr, returns the exit code.
+  param([string]$File, [string[]]$Args)
+  $psi = New-Object System.Diagnostics.ProcessStartInfo
+  $psi.FileName = $File
+  $psi.Arguments = ($Args | ForEach-Object { if ($_ -match '\s') { '"{0}"' -f $_ } else { $_ } }) -join ' '
+  $psi.RedirectStandardOutput = $true
+  $psi.RedirectStandardError  = $true
+  $psi.UseShellExecute = $false
+  $p = [System.Diagnostics.Process]::Start($psi)
+  $p.StandardOutput.ReadToEnd() | Out-Null
+  $p.StandardError.ReadToEnd()  | Out-Null
+  $p.WaitForExit()
+  return $p.ExitCode
+}
 
 $scriptDir = Split-Path -Parent $MyInvocation.MyCommand.Path
 $rootDir   = Split-Path -Parent $scriptDir
@@ -121,11 +140,11 @@ if (-not $hasOrigin) {
 
 # --- 4. Enable GitHub Pages (source: GitHub Actions) -----------------------
 Say 'Enabling GitHub Pages with Actions as source'
-& gh api -X POST "repos/$GITHUB_REPO/pages" -f 'build_type=workflow' *> $null
-if ($LASTEXITCODE -ne 0) {
-  & gh api -X PUT "repos/$GITHUB_REPO/pages" -f 'build_type=workflow' *> $null
-  if ($LASTEXITCODE -ne 0) {
-    Warn 'Pages may already be configured - check repo Settings -> Pages'
+$rc = Invoke-Native 'gh' @('api','-X','POST',"repos/$GITHUB_REPO/pages",'-f','build_type=workflow')
+if ($rc -ne 0) {
+  $rc = Invoke-Native 'gh' @('api','-X','PUT',"repos/$GITHUB_REPO/pages",'-f','build_type=workflow')
+  if ($rc -ne 0) {
+    Say '  Pages already configured (or needs manual enable at Settings -> Pages) — continuing'
   }
 }
 
