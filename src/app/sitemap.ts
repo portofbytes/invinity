@@ -7,6 +7,9 @@ import { articles } from "@/data/journal";
 import { publicEnv } from "@/lib/env";
 const BASE = publicEnv.NEXT_PUBLIC_SITE_URL;
 
+// Required for static export — generated at build time.
+export const dynamic = "force-static";
+
 export default function sitemap(): MetadataRoute.Sitemap {
   const now = new Date();
   const staticPaths = [

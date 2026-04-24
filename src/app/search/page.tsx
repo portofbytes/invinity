@@ -1,18 +1,26 @@
+"use client";
+
 import Link from "next/link";
-import type { Metadata } from "next";
+import { useSearchParams } from "next/navigation";
+import { Suspense } from "react";
 import { wines } from "@/data/wines";
 import { articles } from "@/data/journal";
 import { experiences } from "@/data/experiences";
 import { Hero } from "@/components/sections";
 
-export const metadata: Metadata = { title: "Search" };
+// Client-rendered because the static export has no server runtime to read
+// `searchParams` at request time. The browser reads the URL directly.
+export default function SearchPage() {
+  return (
+    <Suspense fallback={null}>
+      <SearchBody />
+    </Suspense>
+  );
+}
 
-export default async function SearchPage({
-  searchParams,
-}: {
-  searchParams: Promise<{ q?: string }>;
-}) {
-  const { q = "" } = await searchParams;
+function SearchBody() {
+  const params = useSearchParams();
+  const q = params.get("q") ?? "";
   const query = q.trim().toLowerCase();
 
   const wineResults = query

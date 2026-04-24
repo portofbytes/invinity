@@ -1,5 +1,3 @@
-"use server";
-
 import { z } from "zod";
 import { email } from "@/integrations/email";
 import { site } from "@/data/site";
