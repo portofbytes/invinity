@@ -1,0 +1,52 @@
+[
+  {
+    "slug": "dungeness",
+    "name": "Dungeness",
+    "position": "An introduction.",
+    "cadence": "Two shipments — one on joining, one at the next Grande Cuvée disgorgement.",
+    "quantity": "Five bottles across the current house releases.",
+    "statement": "The house's quietest tier. A measured, considered acquaintance — enough wine to follow a single year of the house, no more, no less. For those who prefer to begin slowly.",
+    "privileges": [
+      "First access to each general release before the shop opens publicly",
+      "Ten percent on any additional purchase through the year",
+      "One invitation, per calendar year, to a private winemaker tasting"
+    ],
+    "logistics": "Priced at $264 per allocation. Ten members per release cycle.",
+    "status": "open"
+  },
+  {
+    "slug": "chinook",
+    "name": "Chinook",
+    "position": "A full year with the house.",
+    "cadence": "Two shipments per year — on joining, and at the next Grande Cuvée disgorgement.",
+    "quantity": "A case — twelve bottles — curated from across the house.",
+    "statement": "The membership for those who want to keep the house on their table. Complete coverage of each vintage, preferred allocation on Ocean Aged bottlings, and a standing welcome at the winemaker's table.",
+    "privileges": [
+      "Guaranteed allocation on every general release",
+      "Preferred access to Ocean Aged and library bottles",
+      "Ten percent on any additional purchase through the year",
+      "Complimentary shipping anywhere in British Columbia — or ten percent off at pickup",
+      "One invitation per shipment to a private winemaker tasting with Kaine and Sarah"
+    ],
+    "logistics": "Priced at $530 per allocation. Ten members per release cycle.",
+    "status": "waitlist"
+  },
+  {
+    "slug": "orca",
+    "name": "Orca",
+    "position": "The flagship.",
+    "cadence": "Two shipments per year, at doubled allocation.",
+    "quantity": "Two cases — twenty-four bottles — across every release the house makes.",
+    "statement": "The deepest relationship with the house. Every cuvée, every Ocean Aged retrieval, every library disgorgement — first look, first pour, first allocation. Reserved for the five who wish to live with every wine we make.",
+    "privileges": [
+      "First right of allocation on every micro-release, doubled",
+      "First look at each Ocean Aged retrieval before the public release",
+      "A library bottle with each shipment, chosen by the winemaker",
+      "Ten percent on any additional purchase through the year",
+      "Complimentary shipping anywhere in British Columbia — or ten percent off at pickup",
+      "Two invitations per year to private tastings on the estate"
+    ],
+    "logistics": "Priced at $1,060 per allocation. Five members per release cycle.",
+    "status": "waitlist"
+  }
+]

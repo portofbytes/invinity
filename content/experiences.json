@@ -1,0 +1,42 @@
+[
+  {
+    "slug": "winemakers-table",
+    "title": "Winemaker's Table",
+    "line": "A private tasting of the house's current and library releases, hosted by the winemaker.",
+    "duration": "Approximately two hours",
+    "party": "Minimum ten guests",
+    "access": "By request",
+    "priceLine": "$100 per guest",
+    "description": "An afternoon at the house, in the company of the winemaker. A walk through the current cuvées, a conversation about the vintage, and — if the weather holds — the method demonstrated quietly, from riddling to disgorgement.",
+    "includes": [
+      "Two bottles of Sparkling Brut per ten guests",
+      "A guided tasting of the current Grande Cuvée releases",
+      "A short tour of the disgorgement room",
+      "Optional saber lesson for one or two of the party"
+    ],
+    "practical": [
+      "Held on the estate in North Saanich",
+      "Outdoor, weather permitting; indoor alternative is reserved",
+      "Scheduling confirmed by email within seventy-two hours"
+    ]
+  },
+  {
+    "slug": "ocean-aged-evening",
+    "title": "An Ocean-Aged Evening",
+    "line": "A seated vertical of the Ocean Aged release, offered only in the months around retrieval.",
+    "duration": "An evening, three hours",
+    "party": "Eight guests, seated",
+    "access": "Private",
+    "priceLine": "By request only",
+    "description": "A rare format, offered once or twice a year when the Ocean Aged bottles are lifted from the sea. A formal, seated tasting of the land-aged and sea-aged expressions side by side, with supper drawn from the peninsula.",
+    "includes": [
+      "A flight of Grande Cuvée paired against the Ocean Aged release",
+      "A short course supper by a peninsula chef",
+      "A signed record of the evening"
+    ],
+    "practical": [
+      "Dates set with the tide, not the calendar",
+      "Confirmed individually; not held publicly"
+    ]
+  }
+]

@@ -1,0 +1,72 @@
+name: Deploy to GitHub Pages
+
+on:
+  push:
+    branches: [main]
+  workflow_dispatch:
+
+permissions:
+  contents: read
+  pages: write
+  id-token: write
+
+concurrency:
+  group: pages
+  cancel-in-progress: true
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 20
+          cache: npm
+
+      - name: Install
+        run: npm ci
+
+      - name: Build (static export)
+        env:
+          BUILD_STATIC: "1"
+          # Set to "/<repo>" for a project page (e.g. /invinity); leave empty
+          # for a custom domain or user/org page.
+          BASE_PATH: ${{ vars.BASE_PATH }}
+
+          # App env — pulled from repo Secrets/Variables. Any missing key
+          # falls through to stub mode in the app.
+          NEXT_PUBLIC_SITE_URL:      ${{ vars.NEXT_PUBLIC_SITE_URL }}
+          NEXT_PUBLIC_ANALYTICS_ID:  ${{ vars.NEXT_PUBLIC_ANALYTICS_ID }}
+          SQUARESPACE_STORE_URL:     ${{ vars.SQUARESPACE_STORE_URL }}
+          SQUARESPACE_API_KEY:       ${{ secrets.SQUARESPACE_API_KEY }}
+          SANITY_PROJECT_ID:         ${{ vars.SANITY_PROJECT_ID }}
+          SANITY_DATASET:            ${{ vars.SANITY_DATASET }}
+          SANITY_READ_TOKEN:         ${{ secrets.SANITY_READ_TOKEN }}
+          EMAIL_FROM:                ${{ vars.EMAIL_FROM }}
+          EMAIL_TO_HOUSE:            ${{ vars.EMAIL_TO_HOUSE }}
+          RESEND_API_KEY:            ${{ secrets.RESEND_API_KEY }}
+          FORMSPREE_ENDPOINT:        ${{ vars.FORMSPREE_ENDPOINT }}
+        run: npm run build
+
+      - name: Add .nojekyll and CNAME
+        run: |
+          touch out/.nojekyll
+          if [ -n "${{ vars.CUSTOM_DOMAIN }}" ]; then
+            echo "${{ vars.CUSTOM_DOMAIN }}" > out/CNAME
+          fi
+
+      - uses: actions/upload-pages-artifact@v3
+        with:
+          path: ./out
+
+  deploy:
+    needs: build
+    runs-on: ubuntu-latest
+    environment:
+      name: github-pages
+      url: ${{ steps.deployment.outputs.page_url }}
+    steps:
+      - id: deployment
+        uses: actions/deploy-pages@v4

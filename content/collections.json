@@ -1,0 +1,6 @@
+[
+  { "slug": "sparkling", "name": "Sparkling Wines", "tagline": "The house's foundation.", "description": "Traditional-method sparkling wines from the Saanich Peninsula, made in micro-lots from estate and neighbouring fruit." },
+  { "slug": "grande-cuvee", "name": "Grande Cuvée", "tagline": "Our most composed expressions.", "description": "Long-aged tête-de-cuvée bottlings, disgorged only when the house feels they have arrived." },
+  { "slug": "ocean-aged", "name": "Ocean Aged", "tagline": "Cellared under the Salish Sea.", "description": "A tiny experimental release, finished at depth in the Pacific for twenty-four months before being hand-retrieved." },
+  { "slug": "club", "name": "Club Releases", "tagline": "Private to members of the house.", "description": "Micro-production bottlings reserved for members of the house list — Dungeness, Chinook, and Orca." }
+]

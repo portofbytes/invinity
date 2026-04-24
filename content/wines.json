@@ -1,0 +1,245 @@
+[
+  {
+    "slug": "grande-cuvee-brut-blanc-de-blancs-2018",
+    "name": "Grande Cuvée Brut",
+    "cuveeLabel": "Blanc de Blancs",
+    "vintage": "2018",
+    "collection": "grande-cuvee",
+    "style": "Traditional-method Blanc de Blancs, long-aged",
+    "styleShort": "Blanc de Blancs · 2018",
+    "price": 55,
+    "status": "available",
+    "descriptor": "A pale-gold cuvée from a single ridge above the Saanich Inlet — ceremonial, mineral, quietly confident.",
+    "tastingNote": "Pale straw struck with faint green light. A long, fine bead carries notes of orchard blossom, beeswax, and wet chalk, resolving into a saline, almost oceanic finish. Years on the lees have given the wine a patient, architectural weight.",
+    "varietals": "Chardonnay · single vineyard",
+    "method": "Méthode traditionnelle — second fermentation in bottle, hand-riddled, warm-disgorged without fining.",
+    "dosage": "Brut",
+    "volume": "750 mL",
+    "serving": "8–10°C, in a white wine glass. Open thirty minutes before serving.",
+    "pairings": ["Fresh oysters", "Aged comté", "Smoked black cod"],
+    "featured": true,
+    "media": {
+      "bottle": {
+        "src": "/images/wines/grande-cuvee-blanc-2018.jpg",
+        "alt": "Invinity Grande Cuvée Brut Blanc de Blancs 2018 bottle on the shore at Sidney Spit."
+      }
+    },
+    "squarespace": {
+      "productSlug": "2018-grande-cuvee-brut-blanc-de-blancs-2",
+      "productUrl": "https://invinity.ca/shop/2018-grande-cuvee-brut-blanc-de-blancs-2/"
+    }
+  },
+  {
+    "slug": "grande-cuvee-brut-blanc-de-blancs-2020",
+    "name": "Grande Cuvée Brut",
+    "cuveeLabel": "Blanc de Blancs",
+    "vintage": "2020",
+    "collection": "grande-cuvee",
+    "style": "Traditional-method Blanc de Blancs, current release",
+    "styleShort": "Blanc de Blancs · 2020",
+    "price": 47,
+    "status": "available",
+    "descriptor": "The house cuvée in its youngest expression — bright, linear, already elegant.",
+    "tastingNote": "Green apple, linden, and sea spray. The bead is tight and persistent; the mid-palate is unhurried. A quiet, upright wine built for a long table.",
+    "varietals": "Chardonnay",
+    "method": "Méthode traditionnelle. Whole-cluster pressed, wild-yeast primary, minimal intervention.",
+    "dosage": "Brut",
+    "volume": "750 mL",
+    "serving": "8–10°C. A tulip glass preserves the aromatics.",
+    "pairings": ["Dungeness crab", "Fresh chèvre", "Lemon-roasted chicken"],
+    "media": {
+      "bottle": {
+        "src": "/images/wines/grande-cuvee-blanc-2020.jpg",
+        "alt": "Invinity Grande Cuvée Brut Blanc de Blancs 2020 bottle."
+      }
+    },
+    "squarespace": {
+      "productSlug": "2019-grande-cuvee-brut-blanc-de-blancs",
+      "productUrl": "https://invinity.ca/shop/2019-grande-cuvee-brut-blanc-de-blancs/"
+    }
+  },
+  {
+    "slug": "grande-cuvee-brut-rose-2020",
+    "name": "Grande Cuvée Brut",
+    "cuveeLabel": "Rosé",
+    "vintage": "2020",
+    "collection": "grande-cuvee",
+    "style": "Saignée rosé, current release",
+    "styleShort": "Rosé · 2020",
+    "price": 49,
+    "status": "sold-out",
+    "descriptor": "A structured, copper-gold rosé with the quiet weight of long lees-aging.",
+    "tastingNote": "Wild strawberry, blood orange peel, pink peppercorn, and a saline, unhurried close.",
+    "varietals": "Pinot Noir, saignée",
+    "method": "Méthode traditionnelle. Brief skin contact before pressing.",
+    "dosage": "Brut",
+    "volume": "750 mL",
+    "serving": "9–11°C.",
+    "pairings": ["Charcuterie", "Grilled sockeye", "Early strawberries"],
+    "media": {
+      "bottle": {
+        "src": "/images/wines/grande-cuvee-rose-2020.jpg",
+        "alt": "Invinity Grande Cuvée Brut Rosé 2020 bottle."
+      }
+    },
+    "squarespace": {
+      "productSlug": "2019-grande-cuvee-brut-rose",
+      "productUrl": "https://invinity.ca/shop/2019-grande-cuvee-brut-rose/"
+    }
+  },
+  {
+    "slug": "ocean-aged-grande-cuvee-blanc-de-blancs-2019",
+    "name": "Ocean Aged Grande Cuvée Brut",
+    "cuveeLabel": "Blanc de Blancs",
+    "vintage": "2019",
+    "collection": "ocean-aged",
+    "style": "Blanc de Blancs aged beneath the Pacific",
+    "styleShort": "Ocean-aged Blanc de Blancs · 2019",
+    "price": 249,
+    "status": "limited",
+    "descriptor": "Inspired by the legendary shipwrecked champagne bottles preserved for decades by the sea. Three years on land, three years in the Salish Sea, retrieved by a local diver in September 2025.",
+    "tastingNote": "Salt-weathered glass. The wine within is denser than its land-aged twin — iodine, oyster shell, a whisper of kelp, then the citrus-and-chalk core emerges slowly, as though remembered. Every bottle is marked uniquely by the ocean.",
+    "varietals": "Chardonnay",
+    "method": "Méthode traditionnelle. Three years land-aging, then submerged in a custom sea-worthy cage built by a local boat builder, held at depth in the Salish Sea for three winters, hand-retrieved.",
+    "dosage": "Brut",
+    "volume": "750 mL",
+    "disgorged": "Winter 2025",
+    "serving": "9–11°C.",
+    "pairings": ["A clear evening", "Close company", "Silence"],
+    "featured": true,
+    "media": {
+      "bottle": {
+        "src": "/images/wines/ocean-aged-2019-primary.jpeg",
+        "alt": "Ocean-aged Grande Cuvée bottle, marked by sea and tide."
+      },
+      "still": {
+        "src": "/images/wines/ocean-aged-2019-retrieval.jpeg",
+        "alt": "Ocean-aged bottles being retrieved from the Salish Sea."
+      }
+    },
+    "squarespace": {
+      "productSlug": "2021-grande-cuvee-brut-blanc-de-blancs",
+      "productUrl": "https://invinity.ca/shop/2021-grande-cuvee-brut-blanc-de-blancs/"
+    }
+  },
+  {
+    "slug": "ocean-aged-grande-cuvee-rose-2019",
+    "name": "Ocean Aged Grande Cuvée Brut",
+    "cuveeLabel": "Rosé",
+    "vintage": "2019",
+    "collection": "ocean-aged",
+    "style": "Rosé aged beneath the Pacific",
+    "styleShort": "Ocean-aged Rosé · 2019",
+    "price": 249,
+    "status": "limited",
+    "descriptor": "The sea-aged counterpart to our saignée rosé. Retrieved in September 2025; each bottle carries its own weather.",
+    "tastingNote": "Beneath the sea-pressed glass: wild strawberry and iodine, kelp, and a spine of oyster shell. The red-fruit core arrives slowly, as if remembered.",
+    "varietals": "Pinot Noir, saignée",
+    "method": "Méthode traditionnelle. Three years land-aging, three winters submerged in the Salish Sea in a custom cage, hand-retrieved by a local diver.",
+    "dosage": "Brut",
+    "volume": "750 mL",
+    "disgorged": "Winter 2025",
+    "serving": "10–12°C.",
+    "pairings": ["Cured salmon", "A clear evening", "Silence"],
+    "media": {
+      "bottle": {
+        "src": "/images/wines/ocean-aged-2019-detail.jpeg",
+        "alt": "Ocean-aged Grande Cuvée Rosé bottle detail."
+      },
+      "still": {
+        "src": "/images/wines/ocean-aged-2019-context.jpeg",
+        "alt": "Bottles marked by the Pacific, freshly lifted."
+      }
+    },
+    "squarespace": {
+      "productSlug": "2021-grande-cuvee-brute-rose",
+      "productUrl": "https://invinity.ca/shop/2021-grande-cuvee-brute-rose/"
+    }
+  },
+  {
+    "slug": "sparkling-pinot-noir-2021",
+    "name": "Sparkling Pinot Noir",
+    "vintage": "2021",
+    "collection": "sparkling",
+    "style": "Single-varietal sparkling Pinot Noir",
+    "styleShort": "Pinot Noir · 2021",
+    "price": 55,
+    "status": "sold-out",
+    "descriptor": "A pale, structured sparkling drawn from estate Pinot Noir.",
+    "tastingNote": "Pink peppercorn, wild rose, red currant, and cold stone. Clean, saline, unhurried.",
+    "varietals": "Pinot Noir",
+    "method": "Méthode traditionnelle.",
+    "dosage": "Brut",
+    "volume": "750 mL",
+    "serving": "9–11°C.",
+    "pairings": ["Duck confit", "Aged gouda", "Bitter greens"],
+    "media": {
+      "bottle": {
+        "src": "/images/wines/sparkling-pinot-noir-2021.jpg",
+        "alt": "Invinity 2021 Sparkling Pinot Noir bottle."
+      }
+    },
+    "squarespace": {
+      "productSlug": "2021-sparkling-pinot-noir",
+      "productUrl": "https://invinity.ca/shop/2021-sparkling-pinot-noir/"
+    }
+  },
+  {
+    "slug": "sparkling-taille-blanc-de-blancs-2020",
+    "name": "Sparkling Taille",
+    "cuveeLabel": "Blanc de Blancs",
+    "vintage": "2020",
+    "collection": "sparkling",
+    "style": "Second-press cuvée",
+    "styleShort": "Taille · 2020",
+    "price": 37,
+    "status": "sold-out",
+    "descriptor": "A study in the second press. Rounder, quieter, more forgiving.",
+    "tastingNote": "Yellow apple, honeycomb, almond blossom.",
+    "varietals": "Chardonnay, Pinot Gris",
+    "method": "Méthode traditionnelle, second press only.",
+    "dosage": "Brut",
+    "volume": "750 mL",
+    "serving": "8–10°C.",
+    "pairings": ["Roast chicken", "Cream sauces", "Soft cheese"],
+    "media": {
+      "bottle": {
+        "src": "/images/wines/sparkling-taille-blanc-2020.jpg",
+        "alt": "Invinity Sparkling Taille Blanc de Blancs 2020 bottle."
+      }
+    },
+    "squarespace": {
+      "productSlug": "2019-sparkling-brut-blanc-de-blancs",
+      "productUrl": "https://invinity.ca/shop/2019-sparkling-brut-blanc-de-blancs/"
+    }
+  },
+  {
+    "slug": "sparkling-taille-rose-2020",
+    "name": "Sparkling Taille",
+    "cuveeLabel": "Rosé",
+    "vintage": "2020",
+    "collection": "sparkling",
+    "style": "Second-press rosé",
+    "styleShort": "Taille Rosé · 2020",
+    "price": 39,
+    "status": "sold-out",
+    "descriptor": "A quieter, rounder rosé drawn from the second press.",
+    "tastingNote": "Pink grapefruit, raspberry leaf, a faint thread of brioche.",
+    "varietals": "Pinot Noir",
+    "method": "Méthode traditionnelle, second press.",
+    "dosage": "Brut",
+    "volume": "750 mL",
+    "serving": "9–11°C.",
+    "pairings": ["Prosciutto", "Stone fruit", "A long lunch"],
+    "media": {
+      "bottle": {
+        "src": "/images/wines/sparkling-taille-rose-2020.jpg",
+        "alt": "Invinity Sparkling Taille Rosé 2020 bottle."
+      }
+    },
+    "squarespace": {
+      "productSlug": "2019-sparkling-brut-rose",
+      "productUrl": "https://invinity.ca/shop/2019-sparkling-brut-rose/"
+    }
+  }
+]

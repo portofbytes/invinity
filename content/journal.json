@@ -1,0 +1,39 @@
+[
+  {
+    "slug": "why-a-sparkling-only-house",
+    "title": "Why a sparkling-only house",
+    "eyebrow": "House notes",
+    "date": "March 2026",
+    "author": "Jon Sparks",
+    "excerpt": "On the decision — made long before the first bottle was disgorged — to make one thing, and make it patiently.",
+    "body": [
+      "When we began, we were told to make still wine. The peninsula was still being mapped, and a producer was expected to plant widely and to hedge against the vintage.",
+      "We did the opposite. The climate here reads like Champagne's northern cousin — cool, long, mineral, slow to ripen. Still wine, made from fruit that has spent a reluctant summer on the vine, will always feel as if it has arrived ahead of itself. Sparkling will not.",
+      "So we made one thing. We narrowed to the traditional method. We waited six years before releasing a cuvée we were proud of. We wrote very little down."
+    ],
+    "pullQuote": "A house that makes one thing is not a house of fewer options. It is a house of one promise.",
+    "featured": true
+  },
+  {
+    "slug": "the-ocean-aged-release",
+    "title": "The ocean-aged release, in its own words",
+    "eyebrow": "Release notes",
+    "date": "February 2026",
+    "excerpt": "Two winters beneath the Salish Sea. A note on what it does to the wine, and what it does to us.",
+    "body": [
+      "The bottles come up dressed in barnacle and tide. We clean them — not carefully; a little of the sea stays on the glass.",
+      "The wine inside has become denser. It is not the pressure, which is roughly the same as the cellar. It is something to do with the cold — a steadier, more persistent cold than a cellar can hold — and with movement, which no cellar has."
+    ]
+  },
+  {
+    "slug": "the-winemakers-table",
+    "title": "A note on the Winemaker's Table",
+    "eyebrow": "House notes",
+    "date": "January 2026",
+    "excerpt": "What to expect, what to wear, and why we ask for ten.",
+    "body": [
+      "We do not keep a tasting room. We host small groups on the estate, with our time set aside for them alone. Ten guests is the number that fills the courtyard without crowding the method.",
+      "Dress for the peninsula — the afternoon is coastal, the evening cools quickly. Bring little else."
+    ]
+  }
+]

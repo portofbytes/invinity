@@ -1,0 +1,495 @@
+@import "tailwindcss";
+
+:root {
+  --chalk: #F4F0E8;
+  --paper: #EAE3D6;
+  --stone: #C7C0B4;
+  --slate: #4B4B47;
+  --graphite: #232320;
+  --bottle: #1E2B25;
+  --oxide: #6A6A60;
+  --champagne: #B09A6B;
+  --gold-leaf: #A67C2E; /* warmer, more saturated — for decorative line-art */
+  --ocean-dark: #04100C;
+  --ocean-mid: #163028;
+  --ocean-light: #2A4A3E;
+  /* Water palette — blue-teal, so the sea actually reads as water instead of
+     more dark green bands. Dissolves into --graphite at the footer edge. */
+  --sea-surface: #5C8596;
+  --sea-mid:     #2F576A;
+  --sea-deep:    #15303E;
+  --sea-foam:    #D8E1E4;
+
+  --ease-out-quiet: cubic-bezier(0.22, 0.61, 0.36, 1);
+  --ease-in-out-quiet: cubic-bezier(0.65, 0.05, 0.36, 1);
+  --ease-reveal: cubic-bezier(0.16, 1, 0.3, 1);
+
+  --dur-micro: 180ms;
+  --dur-std: 340ms;
+  --dur-cinematic: 780ms;
+
+  --space-24: 1.5rem;
+  --space-40: 2.5rem;
+  --space-64: 4rem;
+  --space-96: 6rem;
+  --space-144: 9rem;
+  --space-192: 12rem;
+
+  --container: 1440px;
+  --reading: 720px;
+  --commerce: 560px;
+}
+
+@theme inline {
+  --color-chalk: var(--chalk);
+  --color-paper: var(--paper);
+  --color-stone: var(--stone);
+  --color-slate: var(--slate);
+  --color-graphite: var(--graphite);
+  --color-bottle: var(--bottle);
+  --color-oxide: var(--oxide);
+  --color-champagne: var(--champagne);
+
+  --color-background: var(--chalk);
+  --color-foreground: var(--graphite);
+
+  --font-serif: var(--font-display-serif), "Cormorant Garamond", "Times New Roman", serif;
+  --font-sans: var(--font-text-sans), "Inter", system-ui, sans-serif;
+}
+
+html, body {
+  background: var(--chalk);
+  color: var(--graphite);
+}
+
+body {
+  font-family: var(--font-sans);
+  font-feature-settings: "ss01", "cv11";
+  -webkit-font-smoothing: antialiased;
+  text-rendering: optimizeLegibility;
+}
+
+::selection { background: var(--bottle); color: var(--chalk); }
+
+.serif { font-family: var(--font-serif); font-weight: 400; letter-spacing: -0.01em; }
+
+.eyebrow {
+  font-family: var(--font-sans);
+  text-transform: uppercase;
+  letter-spacing: 0.18em;
+  font-size: 11px;
+  font-weight: 500;
+  color: var(--oxide);
+}
+
+.rule-hair { border-color: color-mix(in oklab, var(--graphite) 14%, transparent); }
+
+.container-page { max-width: var(--container); margin-inline: auto; padding-inline: 20px; }
+@media (min-width: 768px) { .container-page { padding-inline: 32px; } }
+@media (min-width: 1200px) { .container-page { padding-inline: 80px; } }
+
+.reading-column { max-width: var(--reading); }
+.commerce-column { max-width: var(--commerce); }
+
+.focus-ring:focus-visible {
+  outline: 1px solid var(--graphite);
+  outline-offset: 3px;
+}
+
+a, button { -webkit-tap-highlight-color: transparent; }
+
+.link-quiet {
+  position: relative;
+  display: inline-block;
+  padding-bottom: 2px;
+  color: inherit;
+  border-bottom: 1px solid color-mix(in oklab, currentColor 35%, transparent);
+  transition: border-color var(--dur-micro) var(--ease-out-quiet), color var(--dur-micro) var(--ease-out-quiet);
+}
+.link-quiet:hover { border-bottom-color: currentColor; }
+
+.btn {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 10px;
+  padding: 16px 28px;
+  font-family: var(--font-sans);
+  font-size: 13px;
+  letter-spacing: 0.16em;
+  text-transform: uppercase;
+  font-weight: 500;
+  border: 1px solid currentColor;
+  background: transparent;
+  color: var(--graphite);
+  transition: background var(--dur-std) var(--ease-out-quiet), color var(--dur-std) var(--ease-out-quiet);
+  cursor: pointer;
+  border-radius: 0;
+}
+.btn:hover { background: var(--graphite); color: var(--chalk); }
+.btn-invert { color: var(--chalk); border-color: var(--chalk); }
+.btn-invert:hover { background: var(--chalk); color: var(--graphite); }
+.btn-solid { background: var(--graphite); color: var(--chalk); border-color: var(--graphite); }
+.btn-solid:hover { background: var(--bottle); border-color: var(--bottle); color: var(--chalk); }
+
+.reveal { transition: opacity var(--dur-cinematic) var(--ease-reveal), transform var(--dur-cinematic) var(--ease-reveal); }
+html.js-ready .reveal:not(.is-in) { opacity: 0; transform: translateY(14px); }
+.reveal.is-in { opacity: 1; transform: none; }
+
+@media (prefers-reduced-motion: reduce) {
+  .reveal { opacity: 1 !important; transform: none !important; transition: none !important; }
+  * { animation-duration: 0.001ms !important; animation-iteration-count: 1 !important; transition-duration: 0.001ms !important; }
+}
+
+h1, h2, h3, h4 { font-family: var(--font-serif); font-weight: 400; color: var(--graphite); }
+
+.hero-line { font-size: clamp(42px, 6.4vw, 84px); line-height: 1.02; letter-spacing: -0.02em; }
+.display-l { font-size: clamp(36px, 4.8vw, 64px); line-height: 1.05; letter-spacing: -0.015em; }
+.h1 { font-size: clamp(32px, 3.6vw, 52px); line-height: 1.08; letter-spacing: -0.012em; }
+.h2 { font-size: clamp(26px, 2.6vw, 38px); line-height: 1.14; letter-spacing: -0.008em; }
+.h3 { font-size: clamp(20px, 1.6vw, 26px); line-height: 1.22; }
+.body-l { font-size: 19px; line-height: 1.62; color: var(--slate); }
+.body { font-size: 16px; line-height: 1.68; color: var(--slate); }
+.meta { font-size: 13px; letter-spacing: 0.04em; color: var(--oxide); }
+
+.surface-chalk { background: var(--chalk); color: var(--graphite); }
+.surface-paper { background: var(--paper); color: var(--graphite); }
+.surface-stone { background: var(--stone); color: var(--graphite); }
+.surface-bottle { background: var(--bottle); color: var(--chalk); }
+.surface-graphite { background: var(--graphite); color: var(--chalk); }
+.surface-graphite h1, .surface-graphite h2, .surface-graphite h3, .surface-bottle h1, .surface-bottle h2, .surface-bottle h3 { color: var(--chalk); }
+
+.divider-hair { height: 1px; background: color-mix(in oklab, var(--graphite) 14%, transparent); border: 0; }
+
+.tile-image {
+  position: relative;
+  width: 100%;
+  aspect-ratio: 3 / 5;
+  background: color-mix(in oklab, var(--paper) 60%, var(--stone) 40%);
+  overflow: hidden;
+  transition: transform var(--dur-cinematic) var(--ease-reveal);
+}
+.tile:hover .tile-image { transform: translateY(-4px); }
+.tile-image::after {
+  content: "";
+  position: absolute; inset: 0;
+  background:
+    radial-gradient(ellipse at 50% 20%, color-mix(in oklab, var(--chalk) 55%, transparent) 0%, transparent 60%),
+    linear-gradient(180deg, transparent 40%, color-mix(in oklab, var(--graphite) 8%, transparent) 100%);
+}
+.bottle-silhouette {
+  position: absolute;
+  top: 8%; bottom: 8%;
+  left: 50%; transform: translateX(-50%);
+  width: 22%;
+  background: linear-gradient(180deg, var(--bottle) 0%, var(--bottle) 22%, color-mix(in oklab, var(--bottle) 92%, black) 26%, var(--bottle) 32%, var(--bottle) 100%);
+  border-radius: 40% 40% 6% 6% / 10% 10% 2% 2%;
+  box-shadow: inset -6px 0 12px rgba(0,0,0,0.35), inset 6px 0 10px rgba(255,255,255,0.05);
+}
+.bottle-silhouette::before {
+  content: "";
+  position: absolute; left: 12%; right: 12%; top: 42%; height: 30%;
+  background: color-mix(in oklab, var(--paper) 70%, var(--chalk) 30%);
+  box-shadow: inset 0 1px 0 rgba(0,0,0,0.1);
+}
+
+.grain::before {
+  content: "";
+  position: absolute; inset: 0;
+  pointer-events: none;
+  background-image:
+    radial-gradient(rgba(35,35,32,0.06) 1px, transparent 1px),
+    radial-gradient(rgba(176,154,107,0.05) 1px, transparent 1px);
+  background-size: 3px 3px, 7px 7px;
+  background-position: 0 0, 1px 2px;
+  mix-blend-mode: multiply;
+  opacity: 0.6;
+}
+
+.nav-link {
+  font-family: var(--font-sans);
+  font-size: 12px;
+  letter-spacing: 0.22em;
+  text-transform: uppercase;
+  color: inherit;
+  transition: opacity var(--dur-micro) var(--ease-out-quiet);
+}
+.nav-link:hover { opacity: 0.6; }
+
+input, textarea, select {
+  font: inherit;
+  width: 100%;
+  background: transparent;
+  border: 0;
+  border-bottom: 1px solid color-mix(in oklab, var(--graphite) 22%, transparent);
+  padding: 14px 0;
+  color: var(--graphite);
+  outline: none;
+  transition: border-color var(--dur-micro) var(--ease-out-quiet);
+}
+input:focus, textarea:focus, select:focus { border-bottom-color: var(--graphite); }
+label { display: block; font-size: 11px; letter-spacing: 0.18em; text-transform: uppercase; color: var(--oxide); }
+
+details > summary { list-style: none; cursor: pointer; }
+details > summary::-webkit-details-marker { display: none; }
+
+@keyframes invinity-fade-in { from { opacity: 0; } to { opacity: 1; } }
+@keyframes invinity-slide-in-left { from { transform: translateX(-101%); } to { transform: translateX(0); } }
+@keyframes invinity-slide-in-right { from { transform: translateX(101%); } to { transform: translateX(0); } }
+@keyframes invinity-slide-in-up { from { transform: translateY(24px); opacity: 0; } to { transform: translateY(0); opacity: 1; } }
+
+@media (prefers-reduced-motion: reduce) {
+  [data-state="open"], [data-state="closed"] {
+    animation: none !important;
+  }
+}
+
+/* Radix accordion */
+.acc-item { border-bottom: 1px solid color-mix(in oklab, var(--graphite) 14%, transparent); }
+.acc-trigger {
+  width: 100%;
+  display: flex;
+  align-items: flex-start;
+  justify-content: space-between;
+  gap: 32px;
+  padding: 28px 0;
+  text-align: left;
+  background: transparent;
+  border: 0;
+  cursor: pointer;
+  color: inherit;
+}
+.acc-trigger > .acc-icon {
+  transition: transform var(--dur-std) var(--ease-out-quiet);
+  font-family: var(--font-serif);
+  font-size: 24px;
+  line-height: 1;
+  flex-shrink: 0;
+  color: var(--champagne);
+}
+.acc-trigger[data-state="open"] > .acc-icon { transform: rotate(45deg); }
+.acc-content { overflow: hidden; }
+.acc-content[data-state="open"] { animation: invinity-acc-down var(--dur-std) var(--ease-reveal); }
+.acc-content[data-state="closed"] { animation: invinity-acc-up var(--dur-std) var(--ease-reveal); }
+@keyframes invinity-acc-down { from { height: 0; } to { height: var(--radix-accordion-content-height); } }
+@keyframes invinity-acc-up { from { height: var(--radix-accordion-content-height); } to { height: 0; } }
+.acc-body { padding: 0 0 28px; max-width: 72ch; }
+
+/* ---- Magical bottle stage ------------------------------------------------ */
+.invinity-bottle-stage {
+  position: relative;
+  width: 100%;
+  height: 100%;
+  display: flex;
+  align-items: flex-end;
+  justify-content: center;
+  isolation: isolate;
+}
+.invinity-bottle-glow {
+  position: absolute;
+  inset: 0;
+  pointer-events: none;
+  z-index: 0;
+}
+.invinity-bottle-tilt {
+  position: relative;
+  width: 100%;
+  height: 100%;
+  display: flex;
+  align-items: flex-end;
+  justify-content: center;
+  transform-style: preserve-3d;
+  will-change: transform;
+  z-index: 1;
+}
+.invinity-bottle-breath {
+  position: relative;
+  width: 100%;
+  height: 100%;
+  display: flex;
+  align-items: flex-end;
+  justify-content: center;
+  transform-style: preserve-3d;
+  will-change: transform;
+}
+.invinity-bottle-inner {
+  position: relative;
+  height: 100%;
+  display: flex;
+  align-items: flex-end;
+  justify-content: center;
+  filter: drop-shadow(0 26px 30px rgba(20, 25, 22, 0.28));
+}
+.invinity-bottle-inner > figure {
+  position: relative;
+  width: 100%;
+  height: 100%;
+}
+.invinity-bottle-inner > svg {
+  width: 100%;
+  height: auto;
+  max-height: 100%;
+}
+.invinity-bottle-shine {
+  position: absolute;
+  inset: 0;
+  pointer-events: none;
+  background: linear-gradient(
+    110deg,
+    transparent 38%,
+    rgba(255, 255, 255, 0.28) 48%,
+    rgba(255, 255, 255, 0.04) 56%,
+    transparent 62%
+  );
+  mix-blend-mode: screen;
+  transform: translateX(-120%);
+  animation: invinity-bottle-shine 6.5s ease-in-out infinite;
+  animation-delay: 1.2s;
+  border-radius: 18% 18% 2% 2% / 6% 6% 0 0;
+}
+.invinity-bottle-shadow {
+  position: absolute;
+  left: 50%;
+  bottom: -6%;
+  width: 58%;
+  height: 14px;
+  transform: translateX(-50%);
+  background: radial-gradient(ellipse at center, rgba(20, 25, 22, 0.45) 0%, transparent 70%);
+  filter: blur(10px);
+  pointer-events: none;
+  z-index: 0;
+  transition: transform 600ms var(--ease-out-quiet), opacity 600ms var(--ease-out-quiet);
+}
+.invinity-bottle-bubbles {
+  position: absolute;
+  inset: 0;
+  pointer-events: none;
+  overflow: hidden;
+  /* In front of the bottle — a slight foreground shimmer. */
+  z-index: 2;
+}
+.invinity-bottle-bubbles > span {
+  position: absolute;
+  bottom: -10%;
+  border-radius: 999px;
+  background: radial-gradient(circle at 30% 30%, rgba(255, 255, 255, 0.85), rgba(255, 255, 255, 0.05));
+  mix-blend-mode: screen;
+  opacity: 0;
+  animation-name: invinity-bubble-rise;
+  animation-timing-function: ease-in;
+  animation-iteration-count: infinite;
+}
+
+@keyframes invinity-bottle-float {
+  0%, 100% { transform: translateY(0) rotateY(0deg); }
+  50%      { transform: translateY(-10px) rotateY(2deg); }
+}
+@keyframes invinity-bottle-spin {
+  from { transform: rotateY(0deg); }
+  to   { transform: rotateY(360deg); }
+}
+@keyframes invinity-bottle-shine {
+  0%   { transform: translateX(-120%); }
+  55%  { transform: translateX(120%); }
+  100% { transform: translateX(120%); }
+}
+@keyframes invinity-bubble-rise {
+  0%   { opacity: 0; transform: translate3d(0, 0, 0); }
+  10%  { opacity: 0.8; }
+  80%  { opacity: 0.6; }
+  100% { opacity: 0; transform: translate3d(4px, -360px, 0); }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .invinity-bottle-breath { animation: none !important; }
+  .invinity-bottle-shine { animation: none !important; display: none; }
+  .invinity-bottle-bubbles { display: none; }
+}
+
+/* ---- Ocean wave divider --------------------------------------------------
+   A quiet architectural transition between the page and the graphite footer.
+   Two silhouettes, no highlights, no blue water column. Very subtle. */
+.invinity-ocean {
+  position: relative;
+  height: 120px;
+  margin-bottom: -1px; /* close any subpixel gap into the footer */
+  overflow: hidden;
+  pointer-events: none;
+}
+.invinity-ocean-floor {
+  position: absolute;
+  inset: 0;
+  /* Fully transparent top (page shows through); fades into graphite only
+     in the lower third so the transition reads as content meeting footer. */
+  background: linear-gradient(
+    to bottom,
+    transparent 0%,
+    transparent 62%,
+    color-mix(in oklab, var(--graphite) 55%, transparent) 80%,
+    var(--graphite) 100%
+  );
+}
+.invinity-ocean-layer {
+  position: absolute;
+  inset: 0;
+  display: flex;
+  width: 200%;
+  will-change: transform;
+}
+.invinity-ocean-layer > .invinity-wave-svg {
+  flex: 0 0 50%;
+  width: 50%;
+  height: 100%;
+  display: block;
+}
+.invinity-ocean-far  { opacity: 0.55; animation: invinity-wave-drift 42s linear infinite; }
+.invinity-ocean-near { opacity: 1;    animation: invinity-wave-drift 24s linear infinite reverse; }
+@keyframes invinity-wave-drift {
+  from { transform: translateX(0); }
+  to   { transform: translateX(-50%); }
+}
+
+/* ---- Vine sway ----------------------------------------------------------- */
+.invinity-vine { color: var(--bottle); pointer-events: none; z-index: 1; }
+.invinity-vine-sway { animation: invinity-vine-sway 14s ease-in-out infinite; }
+@keyframes invinity-vine-sway {
+  0%, 100% { transform: rotate(-1.2deg); }
+  50%      { transform: rotate(1.4deg); }
+}
+
+/* ---- Drifting leaf ------------------------------------------------------- */
+.invinity-drift-leaf { color: var(--champagne); pointer-events: none; z-index: 2; top: 40%; left: 0; }
+.invinity-leaf-flutter { animation: invinity-leaf-flutter 2.4s ease-in-out infinite; }
+@keyframes invinity-leaf-flutter {
+  0%, 100% { transform: rotate(-8deg); }
+  50%      { transform: rotate(10deg); }
+}
+@keyframes invinity-leaf-drift {
+  0%   { opacity: 0; transform: translate3d(-10%, 30%, 0) rotate(-15deg); }
+  10%  { opacity: 0.8; }
+  50%  { transform: translate3d(55%, 10%, 0) rotate(10deg); }
+  90%  { opacity: 0.75; }
+  100% { opacity: 0; transform: translate3d(110%, 40%, 0) rotate(-5deg); }
+}
+
+/* ---- Ken-Burns on an image ---------------------------------------------- */
+.invinity-ken-burns {
+  animation: invinity-ken-burns 38s ease-in-out infinite alternate;
+  transform-origin: 50% 50%;
+  will-change: transform;
+}
+@keyframes invinity-ken-burns {
+  0%   { transform: scale(1) translate3d(0, 0, 0); }
+  100% { transform: scale(1.08) translate3d(-1.5%, -1%, 0); }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .invinity-ocean-svg use,
+  .invinity-vine-sway,
+  .invinity-leaf-flutter,
+  .invinity-drift-leaf,
+  .invinity-ken-burns {
+    animation: none !important;
+  }
+  .invinity-drift-leaf { display: none !important; }
+}
