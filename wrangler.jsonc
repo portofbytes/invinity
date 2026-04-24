@@ -1,6 +1,7 @@
 {
   "$schema": "node_modules/wrangler/config-schema.json",
   "name": "invinity",
+  "account_id": "69e81189348de0b59413d67291cee36c",
   "main": ".open-next/worker.js",
   "compatibility_date": "2025-05-01",
   "compatibility_flags": ["nodejs_compat", "global_fetch_strictly_public"],
