@@ -79,19 +79,17 @@ $COMMIT_MESSAGE   = if ($cfg.COMMIT_MESSAGE)   { $cfg.COMMIT_MESSAGE }   else { 
 
 # Public (non-secret) keys -> repo variables
 $REPO_VARS = @(
-  'BASE_PATH',
   'NEXT_PUBLIC_SITE_URL',
   'NEXT_PUBLIC_ANALYTICS_ID',
   'SQUARESPACE_STORE_URL',
   'SANITY_PROJECT_ID',
   'SANITY_DATASET',
   'EMAIL_FROM',
-  'EMAIL_TO_HOUSE',
-  'FORMSPREE_ENDPOINT',
-  'CUSTOM_DOMAIN'
+  'EMAIL_TO_HOUSE'
 )
-# Sensitive -> repo secrets
 $REPO_SECRETS = @(
+  'CLOUDFLARE_ACCOUNT_ID',
+  'CLOUDFLARE_API_TOKEN',
   'SQUARESPACE_API_KEY',
   'SANITY_READ_TOKEN',
   'RESEND_API_KEY'
@@ -138,15 +136,7 @@ if (-not $hasOrigin) {
   }
 }
 
-# --- 4. Enable GitHub Pages (source: GitHub Actions) -----------------------
-Say 'Enabling GitHub Pages with Actions as source'
-$rc = Invoke-Native 'gh' @('api','-X','POST',"repos/$GITHUB_REPO/pages",'-f','build_type=workflow')
-if ($rc -ne 0) {
-  $rc = Invoke-Native 'gh' @('api','-X','PUT',"repos/$GITHUB_REPO/pages",'-f','build_type=workflow')
-  if ($rc -ne 0) {
-    Say '  Pages already configured (or needs manual enable at Settings -> Pages) — continuing'
-  }
-}
+# (No GitHub-Pages setup — Cloudflare hosts the runtime.)
 
 # --- 5. Sync variables + secrets -------------------------------------------
 Say 'Syncing repo variables'

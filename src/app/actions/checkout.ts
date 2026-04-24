@@ -1,3 +1,5 @@
+"use server";
+
 import { z } from "zod";
 import { commerce } from "@/integrations/commerce";
 import { rateLimit } from "@/lib/rate-limit";

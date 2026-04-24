@@ -41,7 +41,6 @@ REPO_VISIBILITY="${REPO_VISIBILITY:-private}"   # or "public"
 
 # Public (non-secret) keys → GitHub Actions *variables*
 REPO_VARS=(
-  BASE_PATH
   NEXT_PUBLIC_SITE_URL
   NEXT_PUBLIC_ANALYTICS_ID
   SQUARESPACE_STORE_URL
@@ -49,11 +48,11 @@ REPO_VARS=(
   SANITY_DATASET
   EMAIL_FROM
   EMAIL_TO_HOUSE
-  FORMSPREE_ENDPOINT
-  CUSTOM_DOMAIN
 )
 # Sensitive keys → GitHub Actions *secrets*
 REPO_SECRETS=(
+  CLOUDFLARE_ACCOUNT_ID
+  CLOUDFLARE_API_TOKEN
   SQUARESPACE_API_KEY
   SANITY_READ_TOKEN
   RESEND_API_KEY
@@ -98,13 +97,8 @@ if ! git remote get-url origin >/dev/null 2>&1; then
   fi
 fi
 
-# --- 4. Enable GitHub Pages (source: GitHub Actions) ------------------------
-say "Enabling GitHub Pages with Actions as source"
-gh api -X POST "repos/$GITHUB_REPO/pages" \
-  -f "build_type=workflow" >/dev/null 2>&1 || \
-  gh api -X PUT "repos/$GITHUB_REPO/pages" \
-    -f "build_type=workflow" >/dev/null 2>&1 || \
-  warn "Pages may already be enabled — check repo Settings → Pages"
+# (No GitHub-Pages setup — Cloudflare hosts the runtime. The GitHub Actions
+#  workflow builds and deploys via wrangler.)
 
 # --- 5. Sync variables + secrets -------------------------------------------
 say "Syncing repo variables"

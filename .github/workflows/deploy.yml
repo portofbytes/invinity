@@ -1,4 +1,4 @@
-name: Deploy to GitHub Pages
+name: Deploy to Cloudflare
 
 on:
   push:
@@ -7,15 +7,14 @@ on:
 
 permissions:
   contents: read
-  pages: write
-  id-token: write
+  deployments: write
 
 concurrency:
-  group: pages
+  group: cf-deploy
   cancel-in-progress: true
 
 jobs:
-  build:
+  deploy:
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v4
@@ -28,17 +27,13 @@ jobs:
       - name: Install
         run: npm ci
 
-      - name: Build (static export)
+      - name: Build (OpenNext for Cloudflare)
         env:
-          BUILD_STATIC: "1"
-          # Set to "/<repo>" for a project page (e.g. /invinity); leave empty
-          # for a custom domain or user/org page.
-          BASE_PATH: ${{ vars.BASE_PATH }}
-
-          # App env — pulled from repo Secrets/Variables. Any missing key
-          # falls through to stub mode in the app.
+          # Public app variables — safe to expose at build time.
           NEXT_PUBLIC_SITE_URL:      ${{ vars.NEXT_PUBLIC_SITE_URL }}
           NEXT_PUBLIC_ANALYTICS_ID:  ${{ vars.NEXT_PUBLIC_ANALYTICS_ID }}
+          # Server env — read at runtime by the Worker, but harmless to set
+          # here too so `next build` can validate.
           SQUARESPACE_STORE_URL:     ${{ vars.SQUARESPACE_STORE_URL }}
           SQUARESPACE_API_KEY:       ${{ secrets.SQUARESPACE_API_KEY }}
           SANITY_PROJECT_ID:         ${{ vars.SANITY_PROJECT_ID }}
@@ -47,26 +42,10 @@ jobs:
           EMAIL_FROM:                ${{ vars.EMAIL_FROM }}
           EMAIL_TO_HOUSE:            ${{ vars.EMAIL_TO_HOUSE }}
           RESEND_API_KEY:            ${{ secrets.RESEND_API_KEY }}
-          FORMSPREE_ENDPOINT:        ${{ vars.FORMSPREE_ENDPOINT }}
-        run: npm run build
+        run: npm run cf:build
 
-      - name: Add .nojekyll and CNAME
-        run: |
-          touch out/.nojekyll
-          if [ -n "${{ vars.CUSTOM_DOMAIN }}" ]; then
-            echo "${{ vars.CUSTOM_DOMAIN }}" > out/CNAME
-          fi
-
-      - uses: actions/upload-pages-artifact@v3
-        with:
-          path: ./out
-
-  deploy:
-    needs: build
-    runs-on: ubuntu-latest
-    environment:
-      name: github-pages
-      url: ${{ steps.deployment.outputs.page_url }}
-    steps:
-      - id: deployment
-        uses: actions/deploy-pages@v4
+      - name: Deploy to Cloudflare Workers
+        env:
+          CLOUDFLARE_ACCOUNT_ID: ${{ secrets.CLOUDFLARE_ACCOUNT_ID }}
+          CLOUDFLARE_API_TOKEN:  ${{ secrets.CLOUDFLARE_API_TOKEN }}
+        run: npx wrangler deploy

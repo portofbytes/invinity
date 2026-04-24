@@ -1,0 +1,17 @@
+{
+  "$schema": "node_modules/wrangler/config-schema.json",
+  "name": "invinity",
+  "main": ".open-next/worker.js",
+  "compatibility_date": "2025-05-01",
+  "compatibility_flags": ["nodejs_compat", "global_fetch_strictly_public"],
+  "assets": {
+    "directory": ".open-next/assets",
+    "binding": "ASSETS"
+  },
+  "observability": {
+    "enabled": true
+  }
+  // App secrets (RESEND_API_KEY, etc.) are set separately with:
+  //   wrangler secret put RESEND_API_KEY
+  // or from the Cloudflare dashboard (Pages → Settings → Environment Variables)
+}

@@ -1,6 +1,5 @@
-// Rate limit utilities. Used from server actions at runtime; during a static
-// export build there's no request context, so header-based client keys fall
-// back to "anon" (we over-limit rather than miss spam).
+import "server-only";
+import { headers } from "next/headers";
 
 // Pluggable rate-limit store. The in-memory default is fine for a single
 // Node process; swap in Redis / Upstash for multi-instance or serverless
@@ -46,20 +45,13 @@ export const policies: Record<"form" | "checkout" | "waitlist", RateLimitPolicy>
 };
 
 async function clientKey(bucket: string): Promise<string> {
-  // `next/headers` is only available inside a live server request. In static
-  // builds / client contexts we collapse to one "anon" bucket.
-  try {
-    const mod = await import("next/headers");
-    const h = await mod.headers();
-    const ip =
-      h.get("x-forwarded-for")?.split(",")[0]?.trim() ||
-      h.get("x-real-ip") ||
-      h.get("cf-connecting-ip") ||
-      "anon";
-    return `${bucket}:${ip}`;
-  } catch {
-    return `${bucket}:anon`;
-  }
+  const h = await headers();
+  const ip =
+    h.get("x-forwarded-for")?.split(",")[0]?.trim() ||
+    h.get("x-real-ip") ||
+    h.get("cf-connecting-ip") ||
+    "anon";
+  return `${bucket}:${ip}`;
 }
 
 export async function rateLimit(bucket: keyof typeof policies): Promise<RateLimitResult> {

@@ -42,3 +42,7 @@ next-env.d.ts
 
 # local deploy secrets
 scripts/deploy.env
+
+# build outputs
+.open-next/
+out/

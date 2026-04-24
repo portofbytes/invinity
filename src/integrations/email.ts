@@ -4,6 +4,7 @@
 // log and return ok; in live mode we hit Resend. Never import Resend directly
 // elsewhere — the standards check will fail the build.
 
+import "server-only";
 import { integrations, serverEnv } from "@/lib/env";
 
 export type EmailMessage = {

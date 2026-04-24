@@ -5,9 +5,6 @@ import { color } from "@/tokens";
 export const size = { width: 1200, height: 630 };
 export const contentType = "image/png";
 export const alt = `${site.name} — Sparkling Wine House`;
-// Required for `output: export` builds so the OG image is generated at build
-// time rather than on demand.
-export const dynamic = "force-static";
 
 export default function OG() {
   return new ImageResponse(
